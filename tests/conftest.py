@@ -2,7 +2,9 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
+
 from api.db import Base
+
 
 @pytest.fixture(scope="function")
 def SessionLocal():

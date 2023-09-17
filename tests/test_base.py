@@ -1,5 +1,6 @@
-from api.main import app
 from api.db import get_db
+from api.main import app
+
 
 def temp_db(f):
     def func(SessionLocal, *args, **kwargs):
