@@ -1,25 +1,38 @@
-import pytest
-from sqlalchemy import create_engine
+from typing import AsyncGenerator
+
+import pytest_asyncio
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_utils import database_exists, drop_database
 
-from api.db import Base
+from api.db import Base, get_db
+from api.main import app
 
+ASYNC_DB_URL = "sqlite+aiosqlite:///:memory:"
 
-@pytest.fixture(scope="function")
-def SessionLocal():
-    # settings of test database
-    TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///./test_temp.db"
-    engine = create_engine(TEST_SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+@pytest_asyncio.fixture(scope="function")
+async def db():
+    # Async用のengineとsessionを作成
+    async_engine = create_async_engine(ASYNC_DB_URL, echo=False)
+    async_session = sessionmaker(
+        autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
+    )
 
-    assert not database_exists(TEST_SQLALCHEMY_DATABASE_URL), "Test database already exists. Aborting tests."
+    # テスト用にオンメモリのSQLiteテーブルを初期化（関数ごとにリセット）
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
 
-    # Create test database and tables
-    Base.metadata.create_all(engine)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    # DIを使ってFastAPIのDBの向き先をテスト用DBに変更
+    async def get_test_db():
+        async with async_session() as session:
+            yield session
 
-    # Run the tests
-    yield SessionLocal
+    app.dependency_overrides[get_db] = get_test_db
+    async with async_session() as session:
+        yield session
 
-    # Drop the test database
-    drop_database(TEST_SQLALCHEMY_DATABASE_URL)
+@pytest_asyncio.fixture(scope="function")
+async def async_client() -> AsyncGenerator:
+    async with AsyncClient(app=app, base_url="https://test") as c:
+        yield c
