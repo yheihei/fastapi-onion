@@ -1,14 +1,17 @@
+import pytest
 from typing import AsyncGenerator
 
 import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import event
+import asyncio
 
 from api.db import Base, get_db
 from api.main import app
 
-ASYNC_DB_URL = "sqlite+aiosqlite:///:memory:"
+ASYNC_DB_URL = "mysql+aiomysql://root@db:3306/test-demo?charset=utf8"
 
 @pytest_asyncio.fixture(scope="function")
 async def db():
@@ -18,7 +21,7 @@ async def db():
         autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
     )
 
-    # テスト用にオンメモリのSQLiteテーブルを初期化（関数ごとにリセット）
+    # テスト用にテーブルを初期化
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
@@ -31,6 +34,8 @@ async def db():
     app.dependency_overrides[get_db] = get_test_db
     async with async_session() as session:
         yield session
+
+    await async_engine.dispose()  # closeを忘れるとテスト後にエラーが出る
 
 @pytest_asyncio.fixture(scope="function")
 async def async_client() -> AsyncGenerator:
