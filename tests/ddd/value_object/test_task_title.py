@@ -1,12 +1,9 @@
-from typing import List, Tuple
 
 import pytest
-from sqlalchemy import select
-from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.ddd.value_object.task_title import TaskTitle
 from api.ddd.value_object.exception import ValueObjectError
+from api.ddd.value_object.task_title import TaskTitle
 
 
 class TestTaskTitle:

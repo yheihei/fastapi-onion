@@ -1,12 +1,9 @@
-import pytest
 from typing import AsyncGenerator
 
 import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import event
-import asyncio
 
 from api.db import Base, get_db
 from api.main import app

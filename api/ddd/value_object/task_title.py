@@ -1,5 +1,6 @@
 from api.ddd.value_object.exception import ValueObjectError
 
+
 class TaskTitle:
     def __init__(self, name: str) -> None:
         # 255文字以上はエラー
