@@ -6,7 +6,7 @@ class TaskTitle:
         # 255文字以上はエラー
         if len(name) > 255:
             raise ValueObjectError("タスク名は255文字以下にしてください")
-        self.name = name
+        self.name: str = name
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self.name
