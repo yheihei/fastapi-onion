@@ -1,6 +1,9 @@
+from typing import Optional
+
+
 class TaskId:
-    def __init__(self, id: int) -> None:
+    def __init__(self, id: Optional[int]) -> None:
         self.id: int = id
 
-    def get_id(self) -> int:
+    def value(self) -> Optional[int]:
         return self.id
