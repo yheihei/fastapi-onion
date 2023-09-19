@@ -24,4 +24,4 @@ class Task(IEquatable[Type["Task"]]):
         return self.__title
 
     def equals(self, other: Type["Task"]) -> bool:
-        return self.id == other.id
+        return self.id.value() == other.id.value()
