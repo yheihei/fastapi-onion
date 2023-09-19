@@ -4,7 +4,7 @@ from api.ddd.repository.i_task_repository import ITaskRepository
 from api.ddd.value_object.task_title import TaskTitle
 
 
-class TaskApplicationService:
+class TaskCreateApplicationService:
 
     def __init__(self, repository: ITaskRepository, service: TaskService) -> None:
         self.repository: ITaskRepository = repository

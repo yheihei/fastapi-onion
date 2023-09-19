@@ -7,13 +7,14 @@ from api.ddd.value_object.task_title import TaskTitle
 
 class Task(IEquatable[Type["Task"]]):
 
-    def __init__(self, title: TaskTitle, id: Optional[TaskId] = None) -> None:
+    def __init__(self, title: TaskTitle, id: Optional[TaskId] = None, done: bool = False) -> None:
         if type(title) is not TaskTitle:
             raise ValueError("titleは必須です")
         if id is None:
             id = TaskId(None)
         self.__id: TaskId = id
         self.__title: TaskTitle = title
+        self.__done: bool = done
 
     @property
     def id(self):
@@ -22,6 +23,10 @@ class Task(IEquatable[Type["Task"]]):
     @property
     def title(self):
         return self.__title
+    
+    @property
+    def done(self):
+        return self.__done
 
     def equals(self, other: Type["Task"]) -> bool:
         return self.id.value() == other.id.value()

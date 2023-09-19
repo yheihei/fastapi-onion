@@ -6,8 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import api.cruds.task as task_crud
 import api.schemas.task as task_schema
 from api.db import get_db
-from api.ddd.application_service.task_application_service import \
-    TaskApplicationService
+from api.ddd.application_service import TaskCreateApplicationService
 from api.ddd.domain_service.task_service import TaskService
 from api.ddd.repository.task_repository import TaskRepository
 
@@ -22,7 +21,7 @@ async def list_tasks(db: AsyncSession = Depends(get_db)):
 @router.post("/tasks", response_model=task_schema.TaskCreateResponse)
 async def create_task(task_body: task_schema.TaskCreate, db: AsyncSession = Depends(get_db)):
     repository = TaskRepository(db)
-    task = await TaskApplicationService(
+    task = await TaskCreateApplicationService(
         repository,
         TaskService(repository)
     ).register(task_body.title)
