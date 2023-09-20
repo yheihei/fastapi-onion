@@ -1,10 +1,10 @@
+from sqlalchemy import select
+from sqlalchemy.engine import Result
+
 import api.models.task as task_model
 from api.ddd.entity import Task
 from api.ddd.repository.i_task_repository import ITaskRepository
-from api.ddd.value_object import TaskId
-from api.ddd.value_object import TaskTitle
-from sqlalchemy import select
-from sqlalchemy.engine import Result
+from api.ddd.value_object import TaskId, TaskTitle
 
 
 class TaskRepository(ITaskRepository):

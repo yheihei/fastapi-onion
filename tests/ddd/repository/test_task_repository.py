@@ -1,12 +1,8 @@
-from typing import List, Tuple
 
 import pytest
-from sqlalchemy import select
-from sqlalchemy.engine import Result
-from sqlalchemy.ext.asyncio import AsyncSession
-from api.ddd.repository import TaskRepository
 
 import api.models.task as task_model
+from api.ddd.repository import TaskRepository
 
 
 class TestTaskRepository:
