@@ -45,3 +45,26 @@ class TestTask:
             {"title": "1", "id": 1, "done": False},
             {"title": "2", "id": 2, "done": False}
         ] == response.json()
+
+    @pytest.mark.asyncio
+    async def test_update_task(self, db: AsyncSession, async_client):
+        # タスク生成
+        created_task = task_model.Task(title=f"1")
+        db.add(created_task)
+        await db.commit()
+        await db.refresh(created_task)
+
+        res = await async_client.put(
+            "/tasks/1", json={"title": "1modified"}
+        )
+
+        result: Result = await db.execute(
+            select(
+                task_model.Task.id,
+                task_model.Task.title,
+                task_model.Done.id.isnot(None).label("done"),
+            ).outerjoin(task_model.Done)
+        )
+        tasks: List[Tuple] = result.all()
+        print(tasks)
+        # assert (created_task.id, "1modified") == result.first()

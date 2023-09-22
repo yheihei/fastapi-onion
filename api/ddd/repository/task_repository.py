@@ -61,6 +61,7 @@ class TaskRepository(ITaskRepository):
         done: bool
         task_data_model, done = result.one()
         task_data_model.title = task_entity.title.value()
+        self.db.add(task_data_model)
         await self.db.commit()
         await self.db.refresh(task_data_model)
         return self.__to_entity(task_data_model, done)

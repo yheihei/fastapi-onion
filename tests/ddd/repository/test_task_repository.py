@@ -49,7 +49,7 @@ class TestTaskRepository:
                 select(
                     task_model.Task.id,
                     task_model.Task.title,
-                ).where(task_model.Task.id == created_task.id)
+                ).filter(task_model.Task.id == created_task.id)
             )
         )
-        assert (1, "1modified") == result.first()
+        assert (created_task.id, "1modified") == result.first()
