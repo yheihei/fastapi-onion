@@ -17,3 +17,7 @@ class ITaskRepository:
     @abstractclassmethod
     async def get_tasks_with_done(self) -> list[Task]:
         pass
+
+    @abstractclassmethod
+    async def get_task(self, id: int) -> Task:
+        pass

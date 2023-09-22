@@ -32,6 +32,21 @@ class TaskRepository(ITaskRepository):
             tasks.append(self.__to_model(task_data_model, done))
         return tasks
     
+    async def get_task(self, id: int) -> Task:
+        result: Result = await (
+            self.db.execute(
+                select(
+                    task_model.Task,
+                    task_model.Done.id.isnot(None).label("done"),
+                ).outerjoin(task_model.Done)
+                .where(task_model.Task.id == id)
+            )
+        )
+        task_data_model: task_model.Task
+        done: bool
+        task_data_model, done = result.one()
+        return self.__to_model(task_data_model, done)
+    
     def __transfer(self, task_entity: Task) -> task_model.Task:
         return task_model.Task(id=task_entity.id.value(), title=task_entity.title.value())
     

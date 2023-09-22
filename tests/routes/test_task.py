@@ -30,7 +30,7 @@ class TestTask:
         assert (1, "foo", False) == tasks[0]
 
     @pytest.mark.asyncio
-    async def test_get_task(self, db, async_client):
+    async def test_get_tasks(self, db, async_client):
         # タスク生成
         for i in range(0, 2):
             task = task_model.Task(title=f"{i+1}")
