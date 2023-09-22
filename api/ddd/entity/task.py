@@ -30,3 +30,6 @@ class Task(IEquatable[Type["Task"]]):
 
     def equals(self, other: Type["Task"]) -> bool:
         return self.id.value() == other.id.value()
+    
+    def change_title(self, title: TaskTitle) -> None:
+        self.__title = title
