@@ -62,9 +62,6 @@ class TestTask:
             select(
                 task_model.Task.id,
                 task_model.Task.title,
-                task_model.Done.id.isnot(None).label("done"),
-            ).outerjoin(task_model.Done)
+            ).where(task_model.Task.id == created_task.id)
         )
-        tasks: List[Tuple] = result.all()
-        print(tasks)
-        # assert (created_task.id, "1modified") == result.first()
+        assert (created_task.id, "1modified") == result.first()

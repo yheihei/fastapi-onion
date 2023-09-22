@@ -3,7 +3,7 @@ from typing import AsyncGenerator
 import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import close_all_sessions, sessionmaker
 
 from api.db import Base, get_db
 from api.main import app
@@ -23,16 +23,17 @@ async def db():
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    # DIを使ってFastAPIのDBの向き先をテスト用DBに変更
+    # DIを使ってFastAPIのDBの向き先をテスト用DBに変更、テスト関数内で使うDBセッションと共用させる
+    shared_session = async_session()
     async def get_test_db():
-        async with async_session() as session:
-            yield session
+        yield shared_session
 
     app.dependency_overrides[get_db] = get_test_db
-    async with async_session() as session:
-        yield session
+    yield shared_session  # テスト関数にDBセッションを渡す（これは実環境と共用）
 
-    await async_engine.dispose()  # closeを忘れるとテスト後にエラーが出る
+    await shared_session.rollback()  # テスト後にロールバック
+    close_all_sessions()  # テスト後にセッションを閉じる
+    await async_engine.dispose()
 
 @pytest_asyncio.fixture(scope="function")
 async def async_client() -> AsyncGenerator:
