@@ -4,6 +4,7 @@ import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import close_all_sessions, sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from api.db import Base, get_db
 from api.main import app
@@ -14,7 +15,7 @@ ASYNC_DB_URL = "mysql+aiomysql://root@db:3306/test-demo?charset=utf8"
 async def db():
     # Async用のengineとsessionを作成
     async_engine = create_async_engine(ASYNC_DB_URL, echo=False)
-    async_session = sessionmaker(
+    async_session = async_sessionmaker(
         autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
     )
 
