@@ -18,14 +18,14 @@ class TestDoneRepository:
         await db.refresh(created_task)
         created_id = created_task.id
 
-        await DoneRepository(db).create(created_id)
+        await DoneRepository(db).create(created_task.id)
         # もう一度取得
         await db.refresh(created_task)
 
         # doneが作成されていること
         result: Result = await db.execute(
-            select(task_model.Done.id).filter(task_model.Done.id == created_id)
+            select(task_model.Done.id).filter(task_model.Done.id == created_task.id)
         )       
         dones = result.all()
         assert 1 == len(dones)
-        assert (created_id,) == dones[0]
+        assert (created_task.id,) == dones[0]
