@@ -16,7 +16,7 @@ class TestDoneRepository:
         db.add(created_task)
         await db.commit()
         await db.refresh(created_task)
-        created_id = created_task.id
+        created_task.id
 
         await DoneRepository(db).create(created_task.id)
         # もう一度取得
