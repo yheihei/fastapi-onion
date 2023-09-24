@@ -1,11 +1,11 @@
-from typing import Optional, Type
+from typing import Optional
 
 from api.ddd.entity.i_equatable import IEquatable
 from api.ddd.value_object.task_id import TaskId
 from api.ddd.value_object.task_title import TaskTitle
 
 
-class Task(IEquatable[Type["Task"]]):
+class Task(IEquatable["Task"]):
 
     def __init__(self, title: TaskTitle, id: Optional[TaskId] = None, done: bool = False) -> None:
         if type(title) is not TaskTitle:
@@ -28,7 +28,7 @@ class Task(IEquatable[Type["Task"]]):
     def done(self):
         return self.__done
 
-    def equals(self, other: Type["Task"]) -> bool:
+    def equals(self, other: "Task") -> bool:
         return self.id.value() == other.id.value()
     
     def change_title(self, title: TaskTitle) -> None:
