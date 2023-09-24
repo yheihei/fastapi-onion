@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,7 +6,7 @@ from api.ddd.entity.task import Task
 from api.ddd.value_object import TaskId, TaskTitle
 
 
-class ITaskRepository:
+class ITaskRepository(ABC):
 
     def __init__(self, db: AsyncSession) -> None:
         self.db = db

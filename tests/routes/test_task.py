@@ -65,3 +65,24 @@ class TestTask:
             ).where(task_model.Task.id == created_task.id)
         )
         assert (created_task.id, "1modified") == result.first()
+
+    @pytest.mark.asyncio
+    async def test_done_task(self, db: AsyncSession, async_client):
+        # タスク生成
+        created_task = task_model.Task(title=f"1")
+        db.add(created_task)
+        await db.commit()
+        await db.refresh(created_task)
+
+        res = await async_client.put(
+            "/tasks/1/done",
+        )
+        # 関連テーブルが更新されたためもう一度取得
+        await db.refresh(created_task)
+
+        result: Result = await db.execute(
+            select(
+                task_model.Done.id,
+            ).where(task_model.Done.id == created_task.id)
+        )
+        assert (created_task.id,) == result.first()

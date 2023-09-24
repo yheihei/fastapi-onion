@@ -19,7 +19,7 @@ class TestDoneRepository:
         created_task.id
 
         await DoneRepository(db).create(created_task.id)
-        # もう一度取得
+        # 関連テーブルが更新されたためもう一度取得
         await db.refresh(created_task)
 
         # doneが作成されていること
