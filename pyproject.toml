@@ -30,3 +30,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.poe.tasks]
 autoflake = "autoflake -r --remove-all-unused-imports --ignore-init-module-imports --remove-unused-variables api/. tests/. --in-place"
 isort = "isort api/. tests/."
+mypy = "mypy api"
