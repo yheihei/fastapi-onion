@@ -70,6 +70,6 @@ class TaskRepository(ITaskRepository):
         return task_model.Task(id=task_entity.id.value(), title=task_entity.title.value())
     
     def __to_entity(self, task_data_model: task_model.Task, done: bool) -> Task:
-        task_id = TaskId(task_data_model.id)
-        task_title = TaskTitle(task_data_model.title)
+        task_id = TaskId(int(task_data_model.id))
+        task_title = TaskTitle(str(task_data_model.title))
         return Task(id=task_id, title=task_title, done=done)

@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class TaskBase(BaseModel):
-    title: Optional[str] = Field(None, example="クリーニングを取りに行く")
+    title: str = Field(None, example="クリーニングを取りに行く")
 
 
 class Task(TaskBase):
