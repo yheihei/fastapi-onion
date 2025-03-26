@@ -1,13 +1,12 @@
-FROM python:3.11.5-bookworm
+FROM python:3.11
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /src
 
-RUN pip install poetry
+RUN apt-get update && apt-get install -y build-essential
 
 COPY pyproject.toml* poetry.lock* ./
 
-RUN poetry config virtualenvs.in-project true
-RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
+RUN pip install --upgrade pip setuptools && pip install poetry==1.8.5 && poetry config virtualenvs.create false && poetry lock --no-update && poetry install
 
 ENTRYPOINT ["poetry", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--reload"]
