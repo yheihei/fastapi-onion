@@ -18,6 +18,9 @@ sqlalchemy-utils = "^0.41.1"
 mypy = "^1.5.1"
 pytest = "^7.4.3"
 greenlet = "^2.0.2"
+python-jose = "^3.4.0"
+passlib = "^1.7.4"
+python-multipart = "^0.0.20"
 
 
 [tool.poetry.group.dev.dependencies]
